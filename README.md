@@ -24,4 +24,8 @@
 4) Click on potentiometer to change the Heartbeat per second
 
 
+### Group Members
 
+Victor Augusto RM 553518
+
+Vitor Moura RM 553806
