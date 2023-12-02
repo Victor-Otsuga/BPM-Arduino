@@ -1,0 +1,102 @@
+// C++ code
+//Serial.begin(9600);
+//Serial.print(media);
+
+#include <LiquidCrystal.h>
+LiquidCrystal LCD(5,4,3,2,1,0);
+
+char* name = "";
+char* info = "";
+int mediaux = 0;
+long mediatime = 0;
+long lcdtime = 0;
+
+void setup()
+{
+
+  LCD.begin(16,2);// entrada lcd
+  LCD.print("LOANDING...");// imprime tela  inicial
+  
+  pinMode(A1, INPUT);
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
+  pinMode(12, OUTPUT);
+  pinMode(13, OUTPUT);
+  
+}
+
+void loop(){
+int bpm =0;
+char* extra ="";
+int valor = 0;
+int m[5];
+int potenciometro = analogRead(A1);
+int batimentos = map(potenciometro,1023, 0,0,5);
+long myTime = millis();
+  
+  
+  if(mediatime+1000<myTime){
+    
+    m[mediaux] = batimentos;     
+    mediaux++;
+      if (mediaux>4){
+      mediaux = 0;
+    }
+    
+  }
+  
+      
+  if(lcdtime+1000<myTime){
+      for(int i=0;i<5;i++){
+        bpm += m[i];
+       
+      }
+
+    
+    bpm = bpm*12;
+    
+    if (bpm < 60){
+      name = "Frequencia Baixa";
+    }else if(bpm>120){
+      name = "Frequencia alta";
+	}else{
+      name = "Frequencia OK";
+      }
+
+      info = " BPM";
+      valor = bpm;
+ 
+    if(myTime>5000 and lcdtime+1000<myTime){
+      LCD.clear();
+      LCD.setCursor(0,0);
+      LCD.print(name);
+      LCD.setCursor(0,1);
+      LCD.print(valor);
+      LCD.print(info );
+      lcdtime = myTime;
+    }
+  }
+
+
+ 
+  
+  if (valor >= 60 and valor <= 120){
+    	digitalWrite(13, 0);
+    	digitalWrite(12, 0);
+    	digitalWrite(11, 1);
+    	digitalWrite(10, 0);
+  
+  }else if (valor < 60){
+    	digitalWrite(13, 0);
+    	digitalWrite(12, 1);
+    	digitalWrite(11, 0);
+      	digitalWrite(10, 0);
+  }else{
+    	digitalWrite(13, 1);
+    	digitalWrite(12, 0);
+    	digitalWrite(11, 0);
+      	digitalWrite(10, 1);
+  }
+    
+delay(1000);
+}
